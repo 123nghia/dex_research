@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<!-- saved from url=(0067)file:///C:/Users/ADMIN/Desktop/nghia/codeMini/simple_mode_demo.html -->
+<html lang="vi"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aster Simple Mode - Giải Thích Chi Tiết</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            color: #667eea;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-align: center;
+        }
+
+        h2 {
+            color: #764ba2;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .formula {
+            background: #f8f9fa;
+            border-left: 5px solid #667eea;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+        }
+
+        .example-box {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .example-box h3 {
+            color: #856404;
+            margin-bottom: 15px;
+        }
+
+        .step {
+            background: #e7f3ff;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .step-number {
+            display: inline-block;
+            background: #2196F3;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .calculation {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .calc-item {
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .calc-item strong {
+            color: #667eea;
+        }
+
+        .flow-diagram {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 10px;
+            margin: 30px 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+        }
+
+        .pros-cons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .pros, .cons {
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .pros {
+            background: #d4edda;
+            border: 2px solid #28a745;
+        }
+
+        .pros h3 {
+            color: #155724;
+        }
+
+        .cons {
+            background: #f8d7da;
+            border: 2px solid #dc3545;
+        }
+
+        .cons h3 {
+            color: #721c24;
+        }
+
+        ul {
+            margin-left: 20px;
+        }
+
+        li {
+            margin: 10px 0;
+        }
+
+        .interactive-demo {
+            background: #e9ecef;
+            padding: 30px;
+            border-radius: 10px;
+            margin: 30px 0;
+        }
+
+        input[type="number"], select {
+            padding: 10px;
+            margin: 10px;
+            border: 2px solid #667eea;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+
+        button {
+            background: #667eea;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1em;
+            cursor: pointer;
+            margin: 10px;
+        }
+
+        button:hover {
+            background: #764ba2;
+        }
+
+        .result {
+            background: #d1ecf1;
+            border: 2px solid #0c5460;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .result.show {
+            display: block;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #667eea;
+            color: white;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 Aster Simple Mode - Giải Thích Chi Tiết</h1>
+
+        <div class="formula">
+            <strong>📐 Công Thức Cốt Lõi:</strong><br>
+            Execution Price = Oracle Price ± Spread ± Impact
+        </div>
+
+        <h2>1️⃣ Công Thức Tính Giá</h2>
+
+        <h3>A. Spread (Chênh lệch giá)</h3>
+        <div class="formula">
+            Spread = Oracle Price × Spread Rate<br>
+            Ví dụ: $30,000 × 0.04% = $12
+        </div>
+
+        <h3>B. Impact (Tác động khối lượng)</h3>
+        <div class="formula">
+            Impact Ratio = (Order Size / Pool Liquidity) × Impact Factor<br>
+            Price Impact = Oracle Price × Impact Ratio<br><br>
+            Ví dụ: (3.33 BTC / 10,000 BTC) × 0.5 = 0.0167%<br>
+            Impact = $30,000 × 0.000167 = $5
+        </div>
+
+        <h3>C. Giá Khớp Cuối Cùng</h3>
+        <div class="example-box">
+            <h3>Mua BTC</h3>
+            <div class="calculation">
+                <div class="calc-item">
+                    <strong>Oracle:</strong> $30,000
+                </div>
+                <div class="calc-item">
+                    <strong>Spread:</strong> +$12
+                </div>
+                <div class="calc-item">
+                    <strong>Impact:</strong> +$5
+                </div>
+                <div class="calc-item" style="background: #d4edda; font-size: 1.2em; font-weight: bold;">
+                    <strong>Execution Price:</strong> $30,017
+                </div>
+            </div>
+        </div>
+
+        <h2>2️⃣ Quy Trình Giao Dịch</h2>
+
+        <div class="step">
+            <span class="step-number">1</span>
+            <strong>User đặt lệnh</strong>
+            <p>Market BUY 100k USD BTC-PERP</p>
+        </div>
+
+        <div class="step">
+            <span class="step-number">2</span>
+            <strong>Batch Processing</strong>
+            <p>Hệ thống gom nhiều lệnh trong 100-300ms để tránh MEV</p>
+        </div>
+
+        <div class="step">
+            <span class="step-number">3</span>
+            <strong>Tính Net Position</strong>
+            <p>Ví dụ: +50 BTC buy, -30 BTC sell → Net buy 20 BTC</p>
+        </div>
+
+        <div class="step">
+            <span class="step-number">4</span>
+            <strong>Tính giá khớp</strong>
+            <p>Oracle ($30,000) + Spread ($12) + Impact ($5) = $30,017</p>
+        </div>
+
+        <div class="step">
+            <span class="step-number">5</span>
+            <strong>Khớp với ALP Pool</strong>
+            <p>Pool nhận $300,170 (10 BTC × $30,017)</p>
+        </div>
+
+        <div class="step">
+            <span class="step-number">6</span>
+            <strong>Cập nhật position</strong>
+            <p>User nhận: +10 BTC long @ $30,017</p>
+        </div>
+
+        <h2>3️⃣ Ví Dụ Chi Tiết</h2>
+
+        <div class="example-box">
+            <h3>Ví dụ: Mua 100k USD BTC-PERP</h3>
+
+            <div class="step">
+                <strong>Bước 1: Số lượng BTC</strong><br>
+                100,000 / 30,000 = <span class="highlight">3.33 BTC</span>
+            </div>
+
+            <div class="step">
+                <strong>Bước 2: Tính Impact</strong><br>
+                Impact ratio = (3.33 / 10,000) × 0.5 = 0.0167%<br>
+                Price impact = 30,000 × 0.000167 = <span class="highlight">$5.01</span>
+            </div>
+
+            <div class="step">
+                <strong>Bước 3: Tính giá khớp</strong><br>
+                Execution Price = 30,000 + 12 + 5.01 = <span class="highlight">$30,017</span>
+            </div>
+
+            <div class="step">
+                <strong>Bước 4: Tính chi phí</strong><br>
+                Notional = 3.33 × 30,017 = $99,956.61<br>
+                Fee (0.05%) = $49.98<br>
+                Total = <span class="highlight">$100,006.59</span>
+            </div>
+
+            <div class="step">
+                <strong>Kết quả:</strong><br>
+                Position: <span class="highlight">+3.33 BTC @ $30,017</span>
+            </div>
+        </div>
+
+        <h2>4️⃣ Batch Processing</h2>
+
+        <table>
+            <tbody><tr>
+                <th>User</th>
+                <th>Side</th>
+                <th>Size</th>
+                <th>Time</th>
+            </tr>
+            <tr>
+                <td>A</td>
+                <td>BUY</td>
+                <td>1 BTC @ $30,000</td>
+                <td>0ms</td>
+            </tr>
+            <tr>
+                <td>B</td>
+                <td>SELL</td>
+                <td>2 BTC @ $29,990</td>
+                <td>50ms</td>
+            </tr>
+            <tr>
+                <td>C</td>
+                <td>BUY</td>
+                <td>0.5 BTC @ $30,010</td>
+                <td>100ms</td>
+            </tr>
+            <tr>
+                <td>D</td>
+                <td>BUY</td>
+                <td>3 BTC @ $30,005</td>
+                <td>150ms</td>
+            </tr>
+            <tr style="background: #d4edda; font-weight: bold;">
+                <td colspan="3">Net Position</td>
+                <td>+2.5 BTC (BUY)</td>
+            </tr>
+            <tr style="background: #d4edda; font-weight: bold;">
+                <td colspan="3">Execution Price</td>
+                <td>$30,015.75</td>
+            </tr>
+        </tbody></table>
+
+        <h2>5️⃣ Impact Theo Size</h2>
+
+        <table>
+            <tbody><tr>
+                <th>Size (BTC)</th>
+                <th>Impact ($)</th>
+                <th>Impact (%)</th>
+                <th>Execution Price</th>
+            </tr>
+            <tr>
+                <td>0.1</td>
+                <td>$0.15</td>
+                <td>0.0005%</td>
+                <td>$30,012.15</td>
+            </tr>
+            <tr>
+                <td>1.0</td>
+                <td>$1.50</td>
+                <td>0.0050%</td>
+                <td>$30,013.50</td>
+            </tr>
+            <tr>
+                <td>10.0</td>
+                <td>$15.00</td>
+                <td>0.0500%</td>
+                <td>$30,027.00</td>
+            </tr>
+            <tr>
+                <td>100.0</td>
+                <td>$150.00</td>
+                <td>0.5000%</td>
+                <td>$30,162.00</td>
+            </tr>
+            <tr>
+                <td>1000.0</td>
+                <td>$1,500.00</td>
+                <td>5.0000%</td>
+                <td>$31,512.00</td>
+            </tr>
+        </tbody></table>
+
+        <p style="margin-top: 20px; padding: 15px; background: #fff3cd; border-radius: 5px;">
+            💡 <strong>Nhận xét:</strong> Size càng lớn → Impact càng cao → Giá khớp càng xấu. 
+            Vì vậy Simple Mode phù hợp cho lệnh nhỏ-trung bình.
+        </p>
+
+        <h2>6️⃣ Ưu &amp; Nhược Điểm</h2>
+
+        <div class="pros-cons">
+            <div class="pros">
+                <h3>✅ Ưu Điểm</h3>
+                <ul>
+                    <li><strong>Không lộ lệnh:</strong> Batch processing ẩn ý định giao dịch</li>
+                    <li><strong>MEV protection:</strong> Khó exploit, front-run</li>
+                    <li><strong>Đơn giản:</strong> Dễ hiểu cho người mới</li>
+                    <li><strong>Thanh khoản ổn định:</strong> ALP pool luôn có sẵn</li>
+                    <li><strong>Không cần tối ưu:</strong> Không cần đặt limit orders</li>
+                </ul>
+            </div>
+
+            <div class="cons">
+                <h3>❌ Nhược Điểm</h3>
+                <ul>
+                    <li><strong>Spread cao hơn:</strong> Chi phí cao hơn Pro Mode</li>
+                    <li><strong>Price impact:</strong> Lệnh lớn chịu impact</li>
+                    <li><strong>Batch delay:</strong> 100-300ms chờ khớp</li>
+                    <li><strong>Không phù hợp scalping:</strong> Không real-time</li>
+                    <li><strong>Ít control:</strong> Không đặt limit, TP/SL</li>
+                </ul>
+            </div>
+        </div>
+
+        <h2>7️⃣ Interactive Calculator</h2>
+
+        <div class="interactive-demo">
+            <h3>Tính giá khớp cho lệnh của bạn:</h3>
+            
+            <label for="orderSize">Size lệnh (USD):</label>
+            <input type="number" id="orderSize" value="100000" min="1000" step="1000">
+            
+            <label for="orderSide">Side:</label>
+            <select id="orderSide">
+                <option value="buy">BUY</option>
+                <option value="sell">SELL</option>
+            </select>
+            
+            <button onclick="calculateOrder()">Tính Toán</button>
+
+            <div class="result" id="result">
+                <h3>📊 Kết Quả:</h3>
+                <p><strong>Oracle Price:</strong> <span id="oracle">$30,000</span></p>
+                <p><strong>Spread:</strong> <span id="spread">$12</span></p>
+                <p><strong>Impact:</strong> <span id="impact">$0</span></p>
+                <p><strong>Execution Price:</strong> <span id="execPrice">$0</span></p>
+                <p><strong>Quantity (BTC):</strong> <span id="quantity">0</span></p>
+                <p><strong>Total Cost:</strong> <span id="totalCost">$0</span></p>
+                <p><strong>Trading Fee:</strong> <span id="fee">$0</span></p>
+                <p><strong>Final Amount:</strong> <span id="finalAmount">$0</span></p>
+            </div>
+        </div>
+
+        <h2>8️⃣ Flow Diagram</h2>
+
+        <div class="flow-diagram">
+┌──────────────────────────────────────────┐
+│  User: Mua 100k USD BTC                 │
+└─────────────┬──────────────────────────┘
+              │
+              ▼
+┌──────────────────────────────────────────┐
+│  BATCH WINDOW (200ms)                   │
+│  Gom lệnh từ nhiều users                │
+└─────────────┬──────────────────────────┘
+              │
+              ▼
+┌──────────────────────────────────────────┐
+│  Net Position: +2.5 BTC (BUY)          │
+└─────────────┬──────────────────────────┘
+              │
+              ▼
+┌──────────────────────────────────────────┐
+│  Oracle: $30,000                        │
+│  Spread: $12                            │
+│  Impact: $3.75                          │
+│  ─────────────────────────────           │
+│  Execution Price: $30,015.75            │
+└─────────────┬──────────────────────────┘
+              │
+              ▼
+┌──────────────────────────────────────────┐
+│  ALP Pool:                              │
+│  Nhận: $75,039.38                       │
+│  Trả: 2.5 BTC                          │
+└─────────────┬──────────────────────────┘
+              │
+              ▼
+┌──────────────────────────────────────────┐
+│  Update Positions:                      │
+│  +2.5 BTC @ $30,015.75                  │
+└──────────────────────────────────────────┘
+        </div>
+
+        <h2>📝 Tóm Tắt</h2>
+
+        <div style="background: #e7f3ff; padding: 30px; border-radius: 10px; margin-top: 30px;">
+            <h3 style="color: #667eea;">Simple Mode = Giao dịch qua ALP Pool</h3>
+            
+            <div style="margin-top: 20px;">
+                <strong>🏆 Formula chính:</strong>
+                <code>Giá = Oracle ± Spread ± Impact</code>
+            </div>
+
+            <div style="margin-top: 20px;">
+                <strong>⏱️ Timeline:</strong>
+                <ul>
+                    <li>0ms: User đặt lệnh</li>
+                    <li>0-200ms: Batch window gom lệnh</li>
+                    <li>200ms: Tính toán và khớp lệnh</li>
+                    <li>201ms: Cập nhật position</li>
+                </ul>
+            </div>
+
+            <div style="margin-top: 20px;">
+                <strong>🎯 Use Cases:</strong>
+                <ul>
+                    <li>✅ Lệnh nhỏ-trung bình (&lt; $100k)</li>
+                    <li>✅ Người mới bắt đầu</li>
+                    <li>✅ Muốn tránh MEV</li>
+                    <li>❌ Scalping high frequency</li>
+                    <li>❌ Lệnh rất lớn (&gt; $500k)</li>
+                </ul>
+            </div>
+        </div>
+
+        <footer style="text-align: center; margin-top: 50px; color: #666;">
+            <p>📚 Aster Simple Mode Documentation | Updated 2024</p>
+        </footer>
+    </div>
+
+    <script>
+        const CONFIG = {
+            oraclePrice: 30000,
+            spreadRate: 0.0004,
+            liquidityPool: 10000,
+            impactFactor: 0.5,
+            tradingFeeRate: 0.0005
+        };
+
+        function calculateOrder() {
+            const orderSize = parseFloat(document.getElementById('orderSize').value);
+            const isBuy = document.getElementById('orderSide').value === 'buy';
+
+            // Calculate
+            const quantity = orderSize / CONFIG.oraclePrice;
+            const spread = CONFIG.oraclePrice * CONFIG.spreadRate;
+            const impactRatio = (quantity / CONFIG.liquidityPool) * CONFIG.impactFactor;
+            const impact = CONFIG.oraclePrice * impactRatio;
+
+            let execPrice;
+            if (isBuy) {
+                execPrice = CONFIG.oraclePrice + spread + impact;
+            } else {
+                execPrice = CONFIG.oraclePrice - spread - impact;
+            }
+
+            const totalCost = quantity * execPrice;
+            const fee = totalCost * CONFIG.tradingFeeRate;
+            const finalAmount = isBuy ? totalCost + fee : totalCost - fee;
+
+            // Update UI
+            document.getElementById('oracle').textContent = `$${CONFIG.oraclePrice.toLocaleString()}`;
+            document.getElementById('spread').textContent = `$${spread.toFixed(2)}`;
+            document.getElementById('impact').textContent = `$${impact.toFixed(2)}`;
+            document.getElementById('execPrice').textContent = `$${execPrice.toFixed(2)}`;
+            document.getElementById('quantity').textContent = `${quantity.toFixed(4)} BTC`;
+            document.getElementById('totalCost').textContent = `$${totalCost.toFixed(2)}`;
+            document.getElementById('fee').textContent = `$${fee.toFixed(2)} (0.05%)`;
+            document.getElementById('finalAmount').textContent = `$${finalAmount.toFixed(2)}`;
+
+            document.getElementById('result').classList.add('show');
+        }
+    </script>
+
+
+</body></html>
