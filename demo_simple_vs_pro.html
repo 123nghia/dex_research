@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Aster Demo – Simple vs Pro</title>
+  <style>
+    body { font-family: Segoe UI, system-ui, -apple-system, Roboto, Arial, sans-serif; background:#0e0f14; color:#e9edf1; margin:0; }
+    .wrap { max-width: 1080px; margin: 24px auto; padding: 0 16px; }
+    h1 { margin: 0 0 16px; font-size: 22px; }
+    .grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+    @media (min-width: 920px){ .grid { grid-template-columns: 320px 1fr; } }
+    .card { background:#161821; border:1px solid #232536; border-radius:12px; padding:16px; }
+    label { display:block; font-size:12px; color:#aab3c0; margin:10px 0 6px; }
+    input, select { width:100%; padding:10px 12px; border-radius:8px; border:1px solid #2a2d3f; background:#0e1018; color:#e9edf1; }
+    .row { display:grid; grid-template-columns: 1fr 1fr; gap:12px; }
+    button { background:#4453ff; color:white; border:none; padding:12px 14px; border-radius:10px; cursor:pointer; margin-top:12px; }
+    button.secondary { background:#2a2d3f; }
+    .kpi { display:grid; grid-template-columns: repeat(3, 1fr); gap:12px; margin-top:12px; }
+    .kpi .box { background:#0e1018; border:1px solid #232536; border-radius:10px; padding:12px; text-align:center; }
+    .box .v { font-size:18px; font-weight:600; margin-top:2px; }
+    table { width:100%; border-collapse:collapse; margin-top:12px; }
+    th, td { padding:10px 8px; border-bottom:1px solid #232536; font-size:13px; }
+    th { color:#aab3c0; font-weight:600; text-align:left; }
+    .muted { color:#aab3c0; font-size:12px; }
+    .tag { display:inline-block; padding:2px 8px; border-radius:999px; font-size:12px; background:#232536; color:#c7cfdb; }
+    .ok { color:#19d27c; }
+    .warn { color:#ffcc66; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Aster – So sánh Simple Mode vs Pro (CLOB)</h1>
+    <div class="grid">
+      <div class="card">
+        <div class="row">
+          <div>
+            <label>Oracle Price (USD)</label>
+            <input id="oracle" type="number" value="30000" />
+          </div>
+          <div>
+            <label>Spread Rate (bps)</label>
+            <input id="spread" type="number" value="4" />
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label>Pool Liquidity (BTC)</label>
+            <input id="liquidity" type="number" value="10000" />
+          </div>
+          <div>
+            <label>Impact Factor</label>
+            <input id="impactFactor" type="number" step="0.1" value="0.5" />
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label>Order Value (USD)</label>
+            <input id="orderValue" type="number" value="100000" />
+          </div>
+          <div>
+            <label>Side</label>
+            <select id="side">
+              <option value="buy">BUY</option>
+              <option value="sell">SELL</option>
+            </select>
+          </div>
+        </div>
+        <label>Orderbook (asks) – format: price:size, ngăn cách bởi dấu phẩy</label>
+        <input id="asks" type="text" value="30010:1,30015:2,30020:5,30025:10" />
+        <div>
+          <button onclick="run()">Tính Toán</button>
+          <button class="secondary" onclick="presetSmall()">Preset: Lệnh nhỏ</button>
+          <button class="secondary" onclick="presetLarge()">Preset: Lệnh lớn (mỏng)</button>
+        </div>
+        <p class="muted">Công thức Simple: Execution = Oracle ± Spread ± Impact, trong đó Spread = Oracle × bps/10000, Impact = Oracle × (Qty/Liquidity) × ImpactFactor</p>
+      </div>
+
+      <div class="card">
+        <div id="summary" class="kpi">
+          <div class="box"><div class="t">Qty (BTC)</div><div id="qty" class="v">–</div></div>
+          <div class="box"><div class="t">Simple Px</div><div id="pxSimple" class="v">–</div></div>
+          <div class="box"><div class="t">Pro Avg Px</div><div id="pxPro" class="v">–</div></div>
+        </div>
+        <div class="card" style="margin-top:12px; background:#0e1018;">
+          <span class="tag">Tóm tắt nhanh – từng bước</span>
+          <div id="steps" style="margin-top:8px; display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+            <div style="border:1px solid #232536; border-radius:10px; padding:12px;">
+              <div class="tag">Simple Mode</div>
+              <ol style="margin:8px 0 0 18px;">
+                <li>Oracle: <span id="s_oracle">–</span></li>
+                <li>Spread: <span id="s_spread">–</span></li>
+                <li>Impact: <span id="s_impact">–</span></li>
+                <li><strong>Execution:</strong> <span id="s_exec">–</span></li>
+                <li>Notional: <span id="s_notional">–</span></li>
+              </ol>
+            </div>
+            <div style="border:1px solid #232536; border-radius:10px; padding:12px;">
+              <div class="tag">Pro Mode (CLOB)</div>
+              <ol style="margin:8px 0 0 18px;">
+                <li>Qty: <span id="p_qty">–</span> BTC</li>
+                <li>Đi các mức: <span id="p_levels">–</span></li>
+                <li><strong>Avg Price:</strong> <span id="p_avg">–</span></li>
+                <li>Notional: <span id="p_notional">–</span></li>
+              </ol>
+            </div>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr><th>Chế độ</th><th>Giá</th><th>Notional</th><th>Ghi chú</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Simple</td><td id="p1">–</td><td id="n1">–</td><td>Oracle ± Spread ± Impact</td></tr>
+            <tr><td>Pro (CLOB)</td><td id="p2">–</td><td id="n2">–</td><td>Đi qua nhiều mức (VWAP)</td></tr>
+          </tbody>
+        </table>
+        <p id="compare" class="muted">–</p>
+        <div class="card" style="margin-top:12px; background:#0e1018;">
+          <span class="tag">Orderbook dùng</span>
+          <div id="obview" style="margin-top:8px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas;">–</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function parseAsks(s) {
+      return s.split(',').map(x => {
+        const [p, sz] = x.trim().split(':');
+        return { price: Number(p), size: Number(sz) };
+      }).filter(a => Number.isFinite(a.price) && Number.isFinite(a.size));
+    }
+    function fmtUSD(x){ return `$${x.toLocaleString(undefined,{maximumFractionDigits:2})}`; }
+    function simplePrice(qty, oracle, bps, liq, f, isBuy){
+      const spread = oracle * (bps/10000);
+      const impact = oracle * (qty/liq) * f;
+      return isBuy ? (oracle + spread + impact) : (oracle - spread - impact);
+    }
+    function proAvg(qty, asks, isBuy){
+      if(!isBuy){
+        return NaN;
+      }
+      let rem = qty, cost = 0; const used = [];
+      for(const lv of asks){
+        const fill = Math.min(rem, lv.size);
+        if(fill>0){ used.push(`${fill.toFixed(4)} @ ${lv.price}`); }
+        cost += fill * lv.price;
+        rem -= fill;
+        if(rem <= 1e-12) break;
+      }
+      if(rem > 1e-9) throw new Error('Orderbook không đủ size cho demo');
+      return { avg: cost/qty, usedLevels: used };
+    }
+    function presetSmall(){
+      document.getElementById('orderValue').value = 20000;
+      document.getElementById('asks').value = '30010:3,30015:6,30020:10,30025:20';
+      run();
+    }
+    function presetLarge(){
+      document.getElementById('orderValue').value = 300000;
+      document.getElementById('asks').value = '30010:0.5,30015:0.8,30020:1,30025:2';
+      run();
+    }
+    function run(){
+      const oracle = Number(document.getElementById('oracle').value);
+      const bps = Number(document.getElementById('spread').value);
+      const liq = Number(document.getElementById('liquidity').value);
+      const f = Number(document.getElementById('impactFactor').value);
+      const orderUSD = Number(document.getElementById('orderValue').value);
+      const isBuy = document.getElementById('side').value === 'buy';
+      const asks = parseAsks(document.getElementById('asks').value);
+
+      const qty = orderUSD / oracle;
+      const pxS = simplePrice(qty, oracle, bps, liq, f, isBuy);
+      const rP = proAvg(qty, asks, isBuy);
+      const pxP = rP.avg;
+
+      document.getElementById('qty').textContent = qty.toFixed(4);
+      document.getElementById('pxSimple').textContent = fmtUSD(pxS);
+      document.getElementById('pxPro').textContent = fmtUSD(pxP);
+
+      document.getElementById('p1').textContent = fmtUSD(pxS);
+      document.getElementById('n1').textContent = fmtUSD(qty * pxS);
+      document.getElementById('p2').textContent = fmtUSD(pxP);
+      document.getElementById('n2').textContent = fmtUSD(qty * pxP);
+
+      // Steps fill
+      const spreadUSD = oracle * (bps/10000);
+      const impactUSD = oracle * (qty/liq) * f;
+      document.getElementById('s_oracle').textContent = fmtUSD(oracle);
+      document.getElementById('s_spread').textContent = fmtUSD(spreadUSD);
+      document.getElementById('s_impact').textContent = fmtUSD(impactUSD);
+      document.getElementById('s_exec').textContent = fmtUSD(pxS);
+      document.getElementById('s_notional').textContent = fmtUSD(qty*pxS);
+
+      document.getElementById('p_qty').textContent = qty.toFixed(4);
+      document.getElementById('p_levels').textContent = rP.usedLevels.join(' , ');
+      document.getElementById('p_avg').textContent = fmtUSD(pxP);
+      document.getElementById('p_notional').textContent = fmtUSD(qty*pxP);
+
+      const diff = pxS - pxP;
+      const pct = (diff/pxP)*100;
+      const cls = diff >= 0 ? 'warn' : 'ok';
+      document.getElementById('compare').innerHTML = `Chênh lệch: <span class="${cls}">${fmtUSD(diff)} (${pct.toFixed(3)}%)</span> – Simple ${(diff>=0)?'đắt hơn':'rẻ hơn'} Pro với tham số hiện tại.`;
+      document.getElementById('obview').textContent = asks.map(a=>`${a.size} @ ${a.price}`).join(' , ');
+    }
+
+    // auto run on load
+    run();
+  </script>
+</body>
+</html>
